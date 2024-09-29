@@ -1,5 +1,86 @@
 Hello fellow Tech enthusiasts!!!. This is a repository that explains the common practices and advanced javascript concepts
 
+# JavaScript Scopes
+
+In JavaScript, there are several kinds of scopes that determine the visibility and lifespan of variables. These include **Global Scope**, **Function Scope**, **Block Scope**, and **Module Scope**. Understanding these helps in writing more organized and efficient code.
+
+## 1. Global Scope
+
+- Variables declared in the global scope are accessible anywhere in the program.
+- In browsers, the global scope is typically the `window` object.
+
+### Example:
+
+```javascript
+var globalVar = "I am global";
+
+function logGlobalVar() {
+  console.log(globalVar); // Accessible
+}
+
+logGlobalVar();
+console.log(globalVar); // Accessible globally
+```
+Here, globalVar is available inside and outside the function because it’s in the global scope.
+
+## 2. Function Scope
+Variables declared inside a function are only accessible within that function. They cannot be accessed outside of the function.
+functionScopedVar is function-scoped.
+
+Example:
+```js
+function functionScopeExample() {
+  var functionScopedVar = "I exist only in this function";
+  console.log(functionScopedVar); // Accessible within the function
+}
+
+functionScopeExample();
+console.log(functionScopedVar); // Error: functionScopedVar is not defined
+```
+Here, functionScopedVar is not accessible outside the functionScopeExample function.
+
+## 3. Block Scope
+Variables declared with let or const are block-scoped, meaning they are only accessible within the block they are declared in (i.e., within {}).
+This can include loops, if statements, or any other code block.
+
+Example:
+```js
+if (true) {
+  let blockScopedVar = "I am block scoped";
+  console.log(blockScopedVar); // Accessible within this block
+}
+
+console.log(blockScopedVar); // Error: blockScopedVar is not defined
+```
+In this case, blockScopedVar is only available within the if block.
+
+## 4. Module Scope (Introduced in ES6)
+JavaScript modules have their own scope. Variables, functions, and classes declared in a module are not accessible outside the module unless explicitly exported.
+Similarly, a module's contents are not accessible in the global scope unless imported.
+
+Example (in a module):
+```js
+//module.js
+export const moduleVar = "I am module scoped";
+export function moduleFunction() {
+  console.log("Module function");
+}
+```
+```js
+//main.js
+import { moduleVar, moduleFunction } from './module.js';
+
+console.log(moduleVar); // Accessible due to explicit import
+moduleFunction(); // Accessible due to explicit import
+```
+In this example, the variables and functions declared in module.js are not available globally. They are only accessible if imported in another module.
+
+## Summary of Scopes
+- **Global Scope:** Variables available everywhere in the program.
+- **Function Scope:** Variables defined within a function and only accessible within that function.
+- **Block Scope:** Variables declared with let or const inside {} are only accessible within that block.
+- **Module Scope:** Variables and functions inside a module are only accessible when exported and imported.
+
 ### Why are closures useful in JavaScript?
 
 ### [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures#creating_closures_in_loops_a_common_mistake) :
