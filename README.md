@@ -1,5 +1,182 @@
 Hello fellow Tech enthusiasts!!!. This is a repository that explains the common practices and advanced javascript concepts
 
+#Data Types
+
+JavaScript has a variety of data types that can be categorized into two broad categories - Primitive Types and Object Types.
+Understanding these types is essential as they dictate how data is stored, manipulated, and passed around in JavaScript.
+
+### Primitive Types
+Primitive types are the most basic data types in JavaScript, and they are immutable. When you work with a primitive type, you are working directly with the actual value.
+
+🎯 **Number**
+Represents both integers and floating-point numbers.
+JavaScript uses double-precision 64-bit binary format (IEEE 754 standard) for representing numbers.
+Special values: Infinity, -Infinity, and NaN (Not a Number).
+```js
+let integer = 42;
+let float = 3.14;
+let infinityValue = Infinity;
+let notANumber = NaN;
+```
+🎯 **String**
+
+A sequence of characters enclosed in quotes (single ', double ", or backticks for template literals).
+Strings are immutable; modifying a string creates a new string.
+```js
+let singleQuoteStr = 'Hello';
+let doubleQuoteStr = "World";
+let templateLiteral = `Hello, ${doubleQuoteStr}!`; // Template literals support interpolation
+```
+🎯 **Boolean**
+
+Represents a logical value: true or false.
+```js
+let isTrue = true;
+let isFalse = false;
+```
+🎯 **Undefined**
+
+A variable that has been declared but has not been assigned a value.
+```js
+let uninitializedVar;
+console.log(uninitializedVar); // undefined
+```
+🎯 **Null**
+
+Represents the intentional absence of any object value. It is used to indicate that a variable should have no value.
+
+```js
+let emptyVar = null;
+```
+🎯 **Symbol (introduced in ES6)**
+
+A unique and immutable data type often used for object property keys.
+Each Symbol is unique, even if they have the same description.
+```js
+let symbol1 = Symbol('description');
+let symbol2 = Symbol('description');
+console.log(symbol1 === symbol2); // false
+```
+🎯 **BigInt (introduced in ES11/ES2020)**
+
+Used to represent integers with arbitrary precision. This is useful for working with very large numbers that cannot be represented by the Number type.
+```js
+let bigIntNumber = 1234567890123456789012345678901234567890n;
+console.log(bigIntNumber); // Outputs a BigInt value
+```
+
+### Object Types
+
+Objects in JavaScript are more complex and can hold multiple values as properties. Unlike primitives, objects are mutable and store references to their values.
+
+🎯 **Object**
+
+A collection of key-value pairs, where keys (also called properties) are strings (or Symbols), and values can be of any data type.
+Objects are created using the object literal {} or the new Object() syntax.
+```js
+let person = {
+  name: "John",
+  age: 30
+};
+console.log(person.name); // "John"
+```
+🎯 **Array**
+
+A special type of object that holds an ordered list of values (elements).
+Arrays are indexed starting from 0 and can hold any data type, including other arrays.
+```js
+let arr = [1, "Hello", true];
+console.log(arr[1]); // "Hello"
+```
+
+🎯 **Function**
+
+A function is a special kind of object. Functions in JavaScript can be assigned to variables, passed as arguments, and returned from other functions.
+```js
+function greet() {
+  return "Hello!";
+}
+console.log(greet()); // "Hello!"
+```
+🎯 **Date**
+
+Used to work with dates and times.
+```js
+let currentDate = new Date();
+console.log(currentDate); // Current date and time
+```
+
+🎯 **RegExp (Regular Expression)**
+
+Represents a pattern for matching strings.
+
+```js
+let regex = /hello/i;
+console.log(regex.test("Hello world!")); // true
+```
+
+🎯 **Map and Set (introduced in ES6)**
+
+Map: A collection of key-value pairs, where keys can be of any data type (not limited to strings).
+Set: A collection of unique values, where duplicate values are not allowed.
+```js
+let map = new Map();
+map.set("key", "value");
+console.log(map.get("key")); // "value"
+
+let set = new Set();
+set.add(1);
+set.add(1); // Duplicate, ignored
+console.log(set.size); // 1
+```
+## Differences Between Primitive and Object Types
+
+### _**Mutability:**_
+
+- Primitive types are immutable (cannot be altered once created).
+- Object types are mutable (their values can be changed after they are created).
+```js
+let str = "Hello";
+str[0] = "h";  // Strings are immutable, so this does nothing.
+console.log(str); // "Hello"
+
+let obj = { name: "John" };
+obj.name = "Doe";  // Objects are mutable, so this works.
+console.log(obj.name); // "Doe"
+```
+### _**Storage:**_
+
+Primitive types are stored directly by value.
+Object types are stored by reference. When an object is assigned to a variable, that variable holds a reference (or pointer) to the object, not the actual object itself.
+```js
+let a = 10;
+let b = a;  // Copy of value
+b = 20;
+console.log(a); // 10, because `a` holds the original value
+
+let obj1 = { name: "John" };
+let obj2 = obj1;  // Reference to the same object
+obj2.name = "Doe";
+console.log(obj1.name); // "Doe", because both `obj1` and `obj2` refer to the same object
+```
+### _**Comparison:**_
+
+Primitive types are compared by value.
+Object types are compared by reference.
+```js
+let num1 = 10;
+let num2 = 10;
+console.log(num1 === num2); // true, because they have the same value
+
+let obj1 = { name: "John" };
+let obj2 = { name: "John" };
+console.log(obj1 === obj2); // false, because they are different objects in memory
+```
+### Summary
+
+<img width="535" alt="image" src="https://github.com/user-attachments/assets/b4083906-8e3f-4285-90f7-f53f11c02e0f">
+
+
 # JavaScript Scopes
 
 In JavaScript, there are several kinds of scopes that determine the visibility and lifespan of variables. These include **Global Scope**, **Function Scope**, **Block Scope**, and **Module Scope**. Understanding these helps in writing more organized and efficient code.
