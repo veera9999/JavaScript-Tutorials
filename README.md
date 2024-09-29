@@ -81,7 +81,231 @@ In this example, the variables and functions declared in module.js are not avail
 - **Block Scope:** Variables declared with let or const inside {} are only accessible within that block.
 - **Module Scope:** Variables and functions inside a module are only accessible when exported and imported.
 
-### Why are closures useful in JavaScript?
+# Hoisting 
+
+Hoisting in JavaScript is a behavior in which variable and function declarations are moved to the top of their containing scope (global or function) during the compilation phase. This means that you can use variables and functions before they are declared in your code, but only the declarations (not initializations) are hoisted.
+
+### Key Points:
+🎯 Only declarations are hoisted, not initializations.
+- Variables declared with var are hoisted, but their initial values are not.
+- Functions declared using function declarations are fully hoisted.
+- Variables declared with let and const are also hoisted but are placed in the temporal dead zone until the actual line of declaration is 
+  reached, meaning you can’t use them before they are declared.
+  
+Example of Variable Hoisting with var:
+```js
+console.log(hoistedVar);  // Outputs: undefined
+var hoistedVar = "I am hoisted!";
+console.log(hoistedVar);  // Outputs: I am hoisted!
+```
+Explanation:
+The declaration var hoistedVar is hoisted to the top, but its initialization (hoistedVar = "I am hoisted!") is not. Before the line var hoistedVar is executed, hoistedVar is undefined.
+
+Example of Function Hoisting:
+```js
+hoistedFunction();  // Outputs: I am hoisted!
+
+function hoistedFunction() {
+  console.log("I am hoisted!");
+}
+```
+Explanation:
+Function declarations are fully hoisted, meaning the entire function (not just its name) is moved to the top of the scope. As a result, you can call hoistedFunction() before its declaration.
+
+### Hoisting with let and const:
+```js
+console.log(letVar);  // ReferenceError: Cannot access 'letVar' before initialization
+let letVar = "I am not hoisted like var!";
+```
+Explanation:
+Although let and const declarations are hoisted, they are not initialized until their actual declaration is encountered in the code. This results in a ReferenceError if you try to access them before the line where they are declared.
+
+### Summary of Hoisting Behavior:
+- _var:_   Hoisted with an initial value of undefined. You can reference the variable before it's declared, but it will be undefined until it is assigned a value.
+- _let and const:_   Hoisted but not initialized. Accessing them before their declaration causes a ReferenceError.
+- _Functions (using function declarations):_    Fully hoisted, allowing you to call the function before its declaration.
+
+Example to Illustrate Hoisting:
+```js
+// Variable hoisting with `var`
+console.log(varVar); // undefined
+var varVar = "Hoisted var";
+console.log(varVar); // "Hoisted var"
+
+// Variable hoisting with `let`
+try {
+  console.log(letVar); // ReferenceError
+} catch (e) {
+  console.log(e.message);
+}
+let letVar = "Not hoisted like var";
+
+// Function hoisting
+hoistedFunction(); // "Hoisted function"
+
+function hoistedFunction() {
+  console.log("Hoisted function");
+}
+```
+## Why Does Hoisting Happen?
+JavaScript's interpreter splits the code into two phases:**
+- _Compilation phase:_**  The interpreter scans the code and hoists all declarations to the top of the scope (global or function).
+- **_Execution phase: _**  The code is executed line by line in the order it is written, but since declarations are hoisted, they are already processed by this point.
+  
+This behavior of hoisting is one of the quirks of JavaScript that developers must be aware of to avoid potential pitfalls.
+
+# When should you choose to use “let” or “const”
+
+_**let**_ and **_const_** were introduced in JavaScript with the release of ECMAScript 6 (ES6) in 2015. They provide block-scoped variables and constants, which offer more predictable and manageable scoping behavior compared to the traditional var.
+
+Before ES6, var was the only way to declare variables. It has several shortcomings:
+
+❌ _Function Scope:_ Variables declared with **var** are function-scoped, which can lead to confusion and errors, especially in larger codebases.
+
+```js
+function example() {
+  if (true) {
+    var x = 5;
+  }
+  console.log(x); // 5 (x is function-scoped, not block-scoped)
+}
+example();
+```
+
+❌ _Hoisting:_ Variables declared with **var** are hoisted to the top of their enclosing function or global scope, which can lead to unexpected behavior.
+
+```js
+console.log(x); // undefined (x is hoisted but not initialized)
+var x = 10;
+```
+
+❌ _No Block Scope:_ **var** does not respect block scope, which can cause variables to be accessible outside of the intended block.
+
+```js
+if (true) {
+  var x = 10;
+}
+console.log(x); // 10 (x is accessible outside the block)
+```
+
+_**"let"**_
+
+- _Block Scope:_ Variables declared with **let** are limited to the block, statement, or expression in which they are used.
+- _No Hoisting:_ While **let** variables are hoisted to the top of their block, they are not initialized until the let statement is executed. This results in a "temporal dead zone" from
+  the start of the block until the declaration is encountered.
+- _Reassignment:_ Variables declared with **let** can be reassigned.
+
+```js
+let x = 10;
+if (x > 5) {
+  let y = x + 5;
+  console.log(y); // 15
+}
+console.log(y); // ReferenceError: y is not defined
+```
+
+**_"const"_**
+
+- _Block Scope:_ Like **let**, variables declared with const are block-scoped.
+- _No Hoisting:_ The **const** variables are not hoisted to the top of their block, but not initialized until **const** statement is executed similar to **let**. This also results in "temporal dead
+  zone"
+- _No Reassignment:_ Variables declared with **const** cannot be reassigned. They are read-only after the initial assignment.
+- _Immutable Binding:_ While the binding is immutable, the content of the variable (such as an object or array) can still be modified.
+
+```js
+const x = 10;
+x = 20; // TypeError: Assignment to constant variable.
+
+const arr = [1, 2, 3];
+arr.push(4); // This is allowed
+console.log(arr); // [1, 2, 3, 4]
+```
+
+```js
+console.log(x); // ReferenceError: Cannot access 'x' before initialization
+let x = 10;
+console.log(x); // 10
+
+console.log(y); // ReferenceError: Cannot access 'y' before initialization
+const y = 20;
+console.log(y); // 20
+
+console.log(z); // undefined
+var z = 30;
+console.log(z); // 30
+```
+
+### When to Use let and const
+
+- _const:_ we should use **const** for declaring variables that should not be reassigned and which should be treated as constants. Using const by default is generally suggested as it makes our code easier to understand and more predictable.
+
+```js
+const PI = 3.14;
+```
+
+- _let:_ We should use **let** while declaring variables that need to be reassigned Use let when you need to reassign a variable. This is typically used for loop counters, variables that will change value, or in situations where the variable needs to be initialized later.
+
+```js
+let counter = 0;
+counter++;
+```
+
+## An example of a common mistake related to hoisting and how to fix it
+
+Most often, common mistakes related to hoisting will happen while trying to access variable declared with **var** before it's declaration. When a variable is declared with var, only the declaration is hoisted to the top of the scope, not the variable initialization.
+
+```js
+console.log(x); // Outputs: undefined
+var x = 5;
+console.log(x); // Outputs: 5
+```
+
+We can fix this in two simple ways:
+
+- Always following the conventional practice of declaring and initializing variable at the top of the scope before trying to access the variable.
+
+```js
+var x = 5;
+console.log(x); // Outputs: 5
+console.log(x); // Outputs: 5
+```
+
+- Use **let** or **const** to declare a variable. Using let or const creates a "temporal dead zone" from the start of the block until the declaration is processed. This means that if you try to access the variable before it's declared, you'll get a ReferenceError, which is often more helpful for debugging than the undefined behavior of var.
+
+```js
+console.log(x); // Throws ReferenceError: Cannot access 'x' before initialization
+const x = 5;
+console.log(x); // This line is never reached due to the error
+```
+
+Another common mistake is using **var** in loops, which can lead to unexpected behavior due to its function-scoped nature.
+
+```js
+for (var i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i); // 3, 3, 3
+  }, 1000);
+}
+```
+
+The var i declaration is hoisted to the function scope.
+By the time the setTimeout callback runs, the loop has completed, and i is 3.
+
+We can fix this mistake by declaring loop variables with **let**. Using **let** in the loop will create a new binding for each iteration, preserving the expected behavior.
+
+```js
+for (let i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i); // 0, 1, 2
+  }, 1000);
+}
+```
+
+The **let** i declaration is block-scoped.
+Each iteration of the loop creates a new i, preserving the value for the _setTimeout_ callback.
+
+
+# What are closures in JavaScript?
 
 ### [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures#creating_closures_in_loops_a_common_mistake) :
 
