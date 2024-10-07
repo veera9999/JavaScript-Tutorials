@@ -1274,4 +1274,323 @@ console.log(numbers.first());  // 1
 
 Prototype chaining is a core feature of JavaScript’s inheritance model, allowing objects to inherit properties and methods from other objects through the prototype chain. This mechanism makes JavaScript powerful and flexible, supporting object-oriented design patterns like inheritance, method overriding, and extension of built-in objects. Understanding how prototype chaining works is crucial for writing efficient and maintainable JavaScript code.
 
+# "this" Keyword
 
+The this keyword in JavaScript refers to the object from which the function is currently being called or the context in which a function is executed. The value of this depends on how and where the function is invoked, making it one of the more complex and dynamic features of JavaScript.
+
+### Key Concepts of this:
+1. _Global Context (this in the global scope):_ In the global execution context (outside of any function), this refers to the global object. In a browser, the global object is window.
+
+```js
+
+console.log(this); // In browser, this refers to the window object
+```
+this in Object Methods: When this is used inside an object’s method, it refers to the object itself (the object that owns the method).
+
+Example:
+
+```js
+
+const person = {
+  name: 'Alice',
+  greet: function() {
+    console.log(this.name);
+  }
+};
+
+person.greet(); // "Alice" (this refers to the 'person' object)
+```
+this in a Function (Regular Function): In a regular function (not part of an object), this defaults to the global object in non-strict mode (window in browsers). In strict mode, this is undefined.
+
+Example (non-strict mode):
+
+```js
+
+function show() {
+  console.log(this); // In non-strict mode, this refers to window
+}
+
+show();
+```
+Example (strict mode):
+
+```js
+
+'use strict';
+function show() {
+  console.log(this); // In strict mode, this is undefined
+}
+
+show();
+```
+3. _this with Arrow Functions:_ In arrow functions, this is lexically bound, meaning it takes the value of this from the surrounding context (where the arrow function is defined). It does not get its own this.
+
+Example:
+
+```js
+
+const person = {
+  name: 'Bob',
+  greet: function() {
+    const inner = () => {
+      console.log(this.name); // Arrow function takes 'this' from greet's context
+    };
+    inner();
+  }
+};
+
+person.greet(); // "Bob"
+```
+In this case, the arrow function uses the this value from the greet function, which refers to the person object.
+
+4. _this in a Constructor Function:_ In a constructor function, this refers to the newly created object (instance). When you use the new keyword to call a function, this refers to the object being constructed.
+
+Example:
+
+```js
+
+function Person(name) {
+  this.name = name;
+}
+
+const john = new Person('John');
+console.log(john.name); // "John" (this refers to the new object 'john')
+```
+5. _this in Event Handlers:_ In event handlers, this refers to the element that received the event (e.g., the HTML element that triggered the event).
+
+Example:
+
+```html
+
+<button id="myButton">Click me</button>
+
+<script>
+document.getElementById('myButton').addEventListener('click', function() {
+  console.log(this); // 'this' refers to the button element
+});
+</script>
+```
+
+Explicitly Setting this with call(), apply(), and bind(): You can explicitly set the value of this using call(), apply(), and bind().
+
+* call(): Invokes a function with a specified this value and arguments.
+* apply(): Similar to call(), but arguments are passed as an array.
+* bind(): Returns a new function with a specified this value that can be invoked later.
+* 
+Example:
+
+```js
+
+const person1 = { name: 'Alice' };
+const person2 = { name: 'Bob' };
+
+function greet() {
+  console.log('Hello ' + this.name);
+}
+
+greet.call(person1); // "Hello Alice" (sets this to person1)
+greet.apply(person2); // "Hello Bob" (sets this to person2)
+
+const greetAlice = greet.bind(person1);
+greetAlice(); // "Hello Alice" (binds this to person1 permanently)
+```
+**Summary:** 
+
+- _Global Scope:_ this refers to the global object (window in browsers).
+- _Inside a Method:_ this refers to the object that owns the method.
+- _Inside a Function (non-strict mode):_ this refers to the global object.
+- _Inside a Function (strict mode):_ this is undefined.
+- _Arrow Function:_ this is lexically scoped (inherits from the parent context).
+- _Constructor Function:_ this refers to the newly created instance.
+- _Event Handlers:_ this refers to the element that triggered the event.
+  
+Example Combining Multiple Uses of this:
+```js
+
+const person = {
+  name: 'John',
+  greet: function() {
+    console.log(this.name); // 'this' refers to 'person' object
+
+    const arrowFunc = () => {
+      console.log(this.name); // 'this' is lexically bound, still 'person'
+    };
+    arrowFunc();
+
+    function regularFunc() {
+      console.log(this.name); // 'this' is undefined in strict mode or 'window' in non-strict mode
+    }
+    regularFunc();
+  }
+};
+
+person.greet();
+```
+**Conclusion:**
+
+The this keyword is context-dependent in JavaScript, and its value varies depending on how and where the function is invoked. Understanding how this works in different contexts—global, function, object methods, arrow functions, constructors, and event handlers—is key to mastering JavaScript behavior and preventing bugs related to scope and context.
+
+# call(), apply(), bind()
+
+In JavaScript, call(), apply(), and bind() are methods used to control the value of this when invoking functions. They allow you to explicitly set the context (this) for a function, rather than relying on the default context, which can be the global object, an object method, etc. These methods are particularly useful when borrowing functions from other objects or when handling asynchronous code.
+
+1. **call():**
+The call() method calls a function with a specified this value and arguments provided individually.
+
+Syntax:
+```js
+
+func.call(thisArg, arg1, arg2, ...)
+```
+_thisArg:_ The value of this inside the function.
+_arg1, arg2, ...:_ The individual arguments passed to the function.
+
+Example:
+```js
+
+function greet(greeting) {
+  console.log(`${greeting}, my name is ${this.name}`);
+}
+
+const person1 = { name: 'Alice' };
+const person2 = { name: 'Bob' };
+
+greet.call(person1, 'Hello'); // Output: "Hello, my name is Alice"
+greet.call(person2, 'Hi');    // Output: "Hi, my name is Bob"
+```
+Here, greet.call(person1, 'Hello') invokes the greet function and sets this to person1, overriding the default value of this.
+
+2. **apply():**
+The apply() method is similar to call(), but instead of passing arguments individually, you pass them as an array.
+
+Syntax:
+```js
+
+func.apply(thisArg, [argsArray])
+```
+_thisArg:_ The value of this inside the function.
+_argsArray:_ An array (or array-like object) of arguments passed to the function.
+
+Example:
+```js
+function greet(greeting, punctuation) {
+  console.log(`${greeting}, my name is ${this.name}${punctuation}`);
+}
+
+const person1 = { name: 'Alice' };
+const person2 = { name: 'Bob' };
+
+greet.apply(person1, ['Hello', '!']); // Output: "Hello, my name is Alice!"
+greet.apply(person2, ['Hi', '?']);    // Output: "Hi, my name is Bob?"
+```
+Here, greet.apply(person1, ['Hello', '!']) invokes the greet function and sets this to person1, passing the arguments as an array.
+
+3. **bind():**
+The bind() method returns a new function with a specified this value and optional arguments. Unlike call() and apply(), bind() does not immediately invoke the function. Instead, it returns a copy of the function with a permanently bound this value, which can be called later.
+
+Syntax:
+```js
+
+const boundFunc = func.bind(thisArg, arg1, arg2, ...)
+```
+_thisArg:_ The value of this inside the new function.
+_arg1, arg2, ...:_ Optional arguments to partially apply.
+
+Example:
+```js
+
+function greet(greeting) {
+  console.log(`${greeting}, my name is ${this.name}`);
+}
+
+const person1 = { name: 'Alice' };
+
+const greetAlice = greet.bind(person1, 'Hello');
+greetAlice(); // Output: "Hello, my name is Alice"
+```
+
+In this example, greet.bind(person1) returns a new function (greetAlice) where this is permanently set to person1. You can then invoke greetAlice() later, and it will always refer to person1.
+
+### Differences Between call(), apply(), and bind():
+* _call():_ Invokes the function immediately with a specified this value and arguments passed individually.
+* _apply():_ Invokes the function immediately with a specified this value and arguments passed as an array.
+* _bind():_ Returns a new function with a permanently bound this value and optional arguments, which can be invoked later.
+* 
+### Use Cases of call(), apply(), and bind():
+
+1. **Function Borrowing:**
+You can use call() or apply() to borrow methods from one object and use them on another object without redefining the function.
+
+Example:
+
+```js
+
+const person1 = { name: 'Alice' };
+const person2 = { name: 'Bob' };
+
+function introduce() {
+  console.log(`My name is ${this.name}`);
+}
+
+introduce.call(person1); // My name is Alice
+introduce.call(person2); // My name is Bob
+```
+
+2. **Manipulating this in Event Handlers:**
+3. 
+Sometimes, the value of this inside an event handler can be tricky, especially when working with classes or objects. bind() helps ensure the correct this value is used.
+
+Example:
+
+```js
+
+class Button {
+  constructor(label) {
+    this.label = label;
+  }
+
+  click() {
+    console.log(`Button clicked: ${this.label}`);
+  }
+}
+
+const btn = new Button('Submit');
+const buttonElement = document.getElementById('myButton');
+
+// Bind the `click` method to the `btn` object
+buttonElement.addEventListener('click', btn.click.bind(btn));
+```
+
+3. **Partial Application:**
+bind() can be used to create partially applied functions by presetting some arguments, useful for functional programming.
+
+Example:
+
+```js
+
+function multiply(a, b) {
+  return a * b;
+}
+
+const double = multiply.bind(null, 2); // Pre-set 'a' to 2
+console.log(double(5)); // 10
+```
+
+4. **Using apply() for Variable Arguments:**
+apply() is useful when you need to pass an array of arguments to a function, especially when the number of arguments is dynamic.
+
+Example:
+
+```js
+
+function sum(...numbers) {
+  return numbers.reduce((total, num) => total + num, 0);
+}
+
+const numbers = [1, 2, 3, 4, 5];
+console.log(sum.apply(null, numbers)); // 15
+```
+
+**Conclusion:**
+call() and apply() are used to invoke a function with a specific this value, with call() passing arguments individually and apply() passing them as an array.
+bind() creates a new function with a bound this value that can be invoked later. These methods are essential for controlling the execution context of functions in JavaScript, especially when working with complex object-oriented programming and asynchronous callbacks.
