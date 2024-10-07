@@ -892,8 +892,386 @@ setInterval(updateTime, 1000); // Print time every second
 **Conclusion:**
 Callback functions are a core concept in JavaScript, used to handle asynchronous tasks and pass functions as arguments to other functions. They are widely used in event handling, API requests, and functional programming methods, making JavaScript flexible and efficient for handling both synchronous and asynchronous operations.
 
+# Higher Order Functions
 
+A higher-order function is a function that either:
 
+- Takes one or more functions as arguments, or
+- Returns a function as its result.
+  
+Higher-order functions enable functional programming paradigms in JavaScript, making code more modular, reusable, and easier to work with, especially when dealing with operations like transformations, filtering, or asynchronous workflows.
 
+### Characteristics of Higher-Order Functions:
+* **Functions as First-Class Citizens:** In JavaScript, functions can be passed as arguments, returned from other functions, and assigned to variables, allowing for higher-order functions.
+* **Abstraction:** Higher-order functions abstract common logic and allow developers to reuse code by applying different operations via callbacks.
+  
+**Example of a Higher-Order Function:**
+```js
+
+function higherOrderFunction(callback) {
+  console.log('Executing higher-order function');
+  callback();  // calling the callback function passed as an argument
+}
+
+function sayHello() {
+  console.log('Hello from the callback!');
+}
+
+higherOrderFunction(sayHello);  // Passing a function as an argument
+```
+In this example, higherOrderFunction takes sayHello as a callback argument and executes it inside the higher-order function.
+
+### Use Cases of Higher-Order Functions:
+
+1. **Array Methods (map, filter, reduce):**
+Array methods like map(), filter(), and reduce() are commonly used higher-order functions in JavaScript.
+
+* map(): Transforming Array Elements
+```js
+
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(function(num) {
+  return num * 2;
+});
+console.log(doubled); // [2, 4, 6, 8, 10]
+```
+Use case: map() is used to transform each element of an array. In this example, each number is doubled.
+
+filter(): Filtering Array Elements
+```js
+
+const numbers = [1, 2, 3, 4, 5];
+const evenNumbers = numbers.filter(function(num) {
+  return num % 2 === 0;
+});
+console.log(evenNumbers); // [2, 4]
+```
+Use case: filter() is used to return elements that match a condition. Here, it returns only the even numbers.
+
+* reduce(): Reducing an Array to a Single Value
+```js
+
+const numbers = [1, 2, 3, 4, 5];
+const sum = numbers.reduce(function(total, num) {
+  return total + num;
+}, 0);
+console.log(sum); // 15
+```
+Use case: reduce() is used to accumulate values, such as summing numbers or flattening arrays.
+
+2. **Function Factories (Returning Functions):**
+Higher-order functions can return other functions, allowing you to create reusable functions with specific configurations.
+
+Example:
+
+```js
+
+function greetMaker(greeting) {
+  return function(name) {
+    console.log(greeting + ', ' + name + '!');
+  };
+}
+
+const greetHello = greetMaker('Hello');
+greetHello('Alice'); // Hello, Alice!
+
+const greetHi = greetMaker('Hi');
+greetHi('Bob'); // Hi, Bob!
+```
+Use case: greetMaker() generates customized greeting functions, demonstrating how higher-order functions return functions with specific behavior.
+
+3. **Callbacks and Asynchronous Programming:**
+Higher-order functions are commonly used for callback functions in asynchronous programming, such as making API calls, timers, or handling events.
+
+Example:
+
+```js
+
+function fetchData(url, callback) {
+  setTimeout(function() {
+    callback('Fetched data from ' + url);
+  }, 2000);
+}
+
+fetchData('https://api.example.com', function(data) {
+  console.log(data);
+});
+```
+Use case: fetchData simulates an asynchronous operation and calls the provided callback after fetching the data.
+
+4. Event Handling:
+In JavaScript, event listeners use higher-order functions to define what happens when an event (like a button click) occurs.
+
+Example:
+
+```js
+
+document.getElementById('myButton').addEventListener('click', function() {
+  console.log('Button was clicked!');
+});
+```
+Use case: The addEventListener method takes a callback function, which is executed when the event (a button click) occurs.
+
+5. Currying:
+Currying is a technique where a function with multiple arguments is transformed into a series of functions, each taking a single argument. This is commonly achieved using higher-order functions.
+
+Example:
+
+```js
+
+function multiply(a) {
+  return function(b) {
+    return a * b;
+  };
+}
+
+const multiplyByTwo = multiply(2);
+console.log(multiplyByTwo(5)); // 10
+```
+Use case: multiply is a curried function, where the first function takes a, and the second one multiplies it by b. This is useful when you want to reuse functions with preset arguments.
+
+6. **Functional Programming and Composability:**
+Higher-order functions are widely used in functional programming to create composable functions, meaning functions that can be combined to build more complex functionality.
+
+Example of function composition:
+
+```js
+
+function compose(f, g) {
+  return function(x) {
+    return f(g(x));
+  };
+}
+
+function addTwo(x) {
+  return x + 2;
+}
+
+function multiplyByThree(x) {
+  return x * 3;
+}
+
+const composedFunction = compose(addTwo, multiplyByThree);
+console.log(composedFunction(4)); // (4 * 3) + 2 = 14
+```
+Use case: The compose function combines two functions, addTwo and multiplyByThree, into one function that first multiplies, then adds.
+
+**Conclusion:**
+Higher-order functions are a powerful feature of JavaScript that enable functional programming paradigms by passing and returning functions.
+They are widely used for array operations, callbacks, event handling, and function composition. By leveraging higher-order functions, you can write more reusable, modular, and cleaner code.
+
+# Prototype
+
+In JavaScript, prototype is an important concept that allows objects to inherit properties and methods from other objects. Every JavaScript object has a hidden internal property known as [[Prototype]], which points to another object. This object acts as a template, or prototype, from which it can inherit properties and methods. The prototype is key to how inheritance works in JavaScript.
+
+### Key Concepts of Prototypes:
+* Prototype Property (prototype):
+* Functions in JavaScript (specifically constructor functions) have a prototype property. This property is an object that contains properties and methods that should be shared across all instances of objects created by that constructor function.
+* Prototype Chain: JavaScript uses a prototype chain to look up properties and methods. If an object doesn’t have a specific property or method, JavaScript checks its prototype, and this chain continues until it finds the property or reaches the end of the chain (null).
+* __proto__: Each object has an internal link (__proto__) that points to its prototype. This is what establishes the prototype chain.
+* 
+**Example of Prototype Usage:**
+1. Prototype Inheritance:
+```js
+
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+
+Person.prototype.greet = function() {
+  console.log('Hello, my name is ' + this.name);
+};
+
+const john = new Person('John', 30);
+john.greet(); // Output: Hello, my name is John
+```
+In this example:
+
+The Person function is a constructor.
+The greet method is added to the Person.prototype, which means it will be available to all instances created by new Person().
+The object john inherits the greet method from the Person.prototype object.
+
+2. Prototype Chain:
+```js
+
+console.log(john.__proto__ === Person.prototype); // true
+console.log(Person.prototype.__proto__ === Object.prototype); // true
+console.log(Object.prototype.__proto__ === null); // true
+```
+john.__proto__ points to Person.prototype.
+Person.prototype.__proto__ points to Object.prototype, which is the base prototype in JavaScript.
+The end of the chain is Object.prototype.__proto__, which is null.
+
+Use Cases of Prototypes:
+1. Method Sharing:
+Instead of defining methods inside the constructor, you can define them on the prototype so all instances share the same method, saving memory.
+
+```js
+
+function Animal(type) {
+  this.type = type;
+}
+
+Animal.prototype.sound = function() {
+  console.log(this.type + ' makes a sound.');
+};
+
+const dog = new Animal('Dog');
+const cat = new Animal('Cat');
+
+dog.sound(); // Dog makes a sound.
+cat.sound(); // Cat makes a sound.
+```
+Here, both dog and cat share the sound method via the prototype, meaning only one copy of the method exists in memory.
+
+2. Adding Properties/Methods to Built-in Objects:
+You can add new properties or methods to existing built-in prototypes, such as Array or String.
+
+```js
+
+Array.prototype.first = function() {
+  return this[0];
+};
+
+const numbers = [1, 2, 3, 4];
+console.log(numbers.first()); // 1
+```
+However, this practice (called monkey patching) should be done cautiously, as it can cause conflicts if other libraries or future JavaScript versions modify the same prototype.
+
+3. Prototypal Inheritance:
+You can create new objects that inherit from other objects using prototypes. This allows for object-to-object inheritance without needing traditional classes.
+
+```js
+
+const vehicle = {
+  type: 'vehicle',
+  start() {
+    console.log('Starting the ' + this.type);
+  }
+};
+
+const car = Object.create(vehicle);
+car.type = 'car';
+car.start(); // Starting the car
+```
+In this example, car is created using Object.create(vehicle), meaning car inherits properties and methods from the vehicle object.
+
+### Prototype vs __proto__:
+
+* prototype: A property of constructor functions that points to the prototype object that will be used for instances created by that constructor.
+* __proto__: An internal property of all objects that points to the object’s prototype (used to establish the prototype chain).
+  
+**Conclusion:**
+
+In JavaScript, prototypes are fundamental to the inheritance model. They allow objects to inherit properties and methods from other objects, enabling code reuse and efficient memory usage. By understanding prototypes and the prototype chain, you can create more modular, reusable, and memory-efficient code.
+
+#  Prototype Chaining
+
+Prototype chaining is a concept in JavaScript where an object can inherit properties and methods from another object through the prototype chain. When you try to access a property or method on an object, JavaScript first checks the object itself. If it doesn’t find the property, it looks at the object's prototype. This process continues along the chain of prototypes until the property is found or the end of the chain is reached (which is null).
+
+This mechanism enables inheritance in JavaScript, allowing objects to share properties and methods from other objects, promoting code reuse and reducing redundancy.
+
+### How Prototype Chaining Works:
+
+When you access a property or method on an object, JavaScript first checks if that property exists on the object itself.
+If the property is not found, JavaScript looks at the object’s prototype (referenced by __proto__ or [[Prototype]]).
+This continues along the chain of prototypes until it finds the property or reaches the top of the chain, which is Object.prototype.
+If the property is not found even at the top of the chain, undefined is returned.
+
+Example of Prototype Chaining:
+```js
+
+function Animal(type) {
+  this.type = type;
+}
+
+Animal.prototype.sound = function() {
+  console.log(this.type + ' makes a sound.');
+};
+
+function Dog(name) {
+  this.name = name;
+}
+
+// Dog inherits from Animal
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+
+Dog.prototype.bark = function() {
+  console.log(this.name + ' barks!');
+};
+
+const myDog = new Dog('Rex');
+myDog.type = 'Dog';
+
+// Accessing methods via prototype chaining
+myDog.bark();  // Rex barks!
+myDog.sound(); // Dog makes a sound.
+```
+Explanation:
+**Inheritance:** The Dog constructor's prototype is set to an instance of Animal.prototype, which allows Dog objects to inherit properties and methods from Animal.prototype via the prototype chain.
+**Prototype chain:** When myDog.bark() is called, JavaScript first checks the myDog object for the bark method and finds it directly on Dog.prototype.
+
+When myDog.sound() is called, JavaScript does not find sound on Dog.prototype, so it continues the search up the prototype chain to Animal.prototype, where it finds sound().
+Prototype Chain in Built-in Objects:
+JavaScript’s built-in objects like Array, Function, and Object also follow the prototype chain. For example, every array has access to the methods on Array.prototype, and Array.prototype itself inherits from Object.prototype.
+
+```js
+
+const arr = [1, 2, 3];
+
+console.log(arr.hasOwnProperty('length'));  // true (inherited from Object.prototype)
+console.log(arr.toString());                // "1,2,3" (inherited from Array.prototype)
+```
+In this case:
+
+arr is an instance of Array, so JavaScript checks Array.prototype for the toString() method.
+Array.prototype inherits from Object.prototype, where methods like hasOwnProperty are defined.
+The chain ends at Object.prototype.__proto__, which is null.
+
+### Visualization of Prototype Chain:
+Let’s visualize the prototype chain of the myDog object from the earlier example:
+
+```javascript
+
+myDog --> Dog.prototype --> Animal.prototype --> Object.prototype --> null
+```
+myDog first looks at its own properties.
+If the property is not found, it checks Dog.prototype.
+If not found there, it checks Animal.prototype.
+Finally, it checks Object.prototype, the root of all JavaScript objects, before reaching null.
+
+### Practical Use Cases of Prototype Chaining:
+* _Inheritance:_ Prototype chaining enables inheritance in JavaScript, allowing child objects to inherit properties and methods from parent objects, as seen in the Dog and Animal example.
+
+* _Method Overriding:_ You can override methods in the prototype chain. If an object has a method with the same name as one of its prototype methods, the object's own method will take precedence.
+
+```js
+
+const obj = {
+  toString: function() {
+    return 'Custom toString';
+  }
+};
+
+console.log(obj.toString());  // Custom toString
+```
+Here, the custom toString method on obj overrides the toString method from Object.prototype.
+
+* _Extension of Built-in Objects:_ Prototype chaining allows you to extend built-in JavaScript objects. For example, you can add custom methods to Array.prototype to create custom array behaviors.
+
+```js
+
+Array.prototype.first = function() {
+  return this[0];
+};
+
+const numbers = [1, 2, 3];
+console.log(numbers.first());  // 1
+```
+**Conclusion:**
+
+Prototype chaining is a core feature of JavaScript’s inheritance model, allowing objects to inherit properties and methods from other objects through the prototype chain. This mechanism makes JavaScript powerful and flexible, supporting object-oriented design patterns like inheritance, method overriding, and extension of built-in objects. Understanding how prototype chaining works is crucial for writing efficient and maintainable JavaScript code.
 
 
