@@ -860,7 +860,7 @@ fetchData('https://api.example.com/data', function(error, data) {
 ```
 In this example, the fetchData function sends an HTTP request, and once it’s done, it calls the callback function to handle the response or an error.
 
-4.**Functional Programming:**
+4. **Functional Programming:**
 In functional programming, callbacks are commonly used with array methods like map, filter, or reduce to perform operations on array elements.
 
 Example with map:
