@@ -18,7 +18,7 @@ ES6/ES2015 introduced many notable features, including:
 Since the release of ES6 in 2015, new major versions of ECMAScript have been published every June, with subsequent versions named by year (e.g., ES2016, ES2017, etc.)35.
 ES6 marked a significant milestone in JavaScript's evolution, introducing many features that have become fundamental to modern JavaScript development.
 
-#Data Types
+# Data Types
 
 JavaScript has a variety of data types that can be categorized into two broad categories - Primitive Types and Object Types.
 Understanding these types is essential as they dictate how data is stored, manipulated, and passed around in JavaScript.
