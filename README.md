@@ -2523,6 +2523,157 @@ While this approach reduces nesting, it's not as clean as using Promises or asyn
 
 **Conclusion:**
 
-Callback Hell occurs when there are multiple nested callbacks handling asynchronous tasks, leading to poorly structured, unreadable, and unmaintainable code. It can be avoided by using modern JavaScript features such as Promises and async/await, which allow you to write asynchronous code in a more readable, linear fashion. These techniques greatly improve the clarity of asynchronous code and make it easier to manage error handling and control flow.
+Callback Hell occurs when there are multiple nested callbacks handling asynchronous tasks, leading to poorly structured, unreadable, and unmaintainable code. 
+It can be avoided by using modern JavaScript features such as Promises and async/await, which allow you to write asynchronous code in a more readable, linear fashion. 
+These techniques greatly improve the clarity of asynchronous code and make it easier to manage error handling and control flow.
+
+# Event Bubblimg & Event Capturing
+
+In JavaScript, event bubbling and event capturing (also known as event propagation phases) are two mechanisms that describe how events propagate or travel through the DOM (Document Object Model) when an event occurs. These mechanisms determine the order in which event handlers are triggered when an event happens on a nested element (i.e., an element inside another element).
+
+### Event Propagation Phases:
+1. **Event Capturing (Capture Phase):**
+
+- In the capturing phase, the event starts from the root of the DOM (the outermost ancestor) and moves downward to the target element (the element that triggered the event). This phase is also called the trickling phase because the event trickles down through the ancestors before reaching the target element.
+- During this phase, the event handler for the ancestor elements can be triggered before the event reaches the target element, but only if the handler is specifically set to listen during the capturing phase.
+
+2. Event Bubbling (Bubble Phase):
+
+- After the event reaches the target element and its event handler is executed, the event bubbles up from the target element back to the root of the DOM.
+- It travels upward through all the ancestor elements, triggering their event handlers if they are listening for the same event.
+- Event bubbling is the default behavior in most browsers. It means that if an event handler is attached to an ancestor element, it can also be triggered when the event happens on one of its child elements.
+
+### Target Phase:
+
+This phase refers to the moment when the event reaches the target element itself (the element that triggered the event). In this phase, the event handler attached to the target element is executed.
+
+#### Example of Event Bubbling and Event Capturing:
+Consider the following HTML structure:
+
+```html
+
+<div id="parent">
+  <button id="child">Click Me</button>
+</div>
+```
+Here, the button element (#child) is nested inside a div element (#parent).
+
+
+```js
+
+const parent = document.getElementById('parent');
+const child = document.getElementById('child');
+
+// Event listener on parent
+parent.addEventListener('click', () => {
+  console.log('Parent clicked (bubbling phase)');
+});
+
+// Event listener on child
+child.addEventListener('click', () => {
+  console.log('Child clicked');
+});
+```
+When the #child button is clicked, the event will trigger on the #child element first, and then the event will bubble up to the #parent element, triggering its event listener as well. The output will be:
+
+```js
+
+Child clicked
+Parent clicked (bubbling phase)
+```
+This is event bubbling because the event "bubbles up" from the child element to the parent element.
+
+#### Capturing Phase Example:
+If we want to listen to the event during the capturing phase, we need to explicitly specify it using the third parameter of addEventListener:
+
+```js
+
+const parent = document.getElementById('parent');
+const child = document.getElementById('child');
+
+// Event listener on parent (capturing phase)
+parent.addEventListener(
+  'click',
+  () => {
+    console.log('Parent clicked (capturing phase)');
+  },
+  true // Enables capturing phase
+);
+
+// Event listener on child
+child.addEventListener('click', () => {
+  console.log('Child clicked');
+});
+```
+Now, when you click the #child button, the output will be:
+
+```js
+
+Parent clicked (capturing phase)
+Child clicked
+```
+In this case, the event is captured by the #parent element first during the capturing phase, and then it reaches the #child element.
+
+### Differences Between Event Bubbling and Capturing:
+**Event Bubbling:**
+
+- The event is triggered first on the target element, and then it bubbles up through the ancestor elements (parent, grandparent, etc.).
+- This is the default behavior in JavaScript when events are fired.
+- You don’t need to explicitly specify event bubbling; it happens automatically unless prevented.
+
+**Event Capturing:**
+
+- The event is captured by the ancestor elements first (starting from the root) and then travels down to the target element.
+- You must explicitly enable event capturing by passing true as the third argument to addEventListener.
+- Event capturing is less commonly used than event bubbling.
+  
+### Event.stopPropagation():
+If you want to stop an event from propagating further (either bubbling or capturing), you can use the event.stopPropagation() method.
+
+Example:
+```js
+
+const parent = document.getElementById('parent');
+const child = document.getElementById('child');
+
+// Event listener on parent
+parent.addEventListener('click', () => {
+  console.log('Parent clicked');
+});
+
+// Event listener on child
+child.addEventListener('click', (event) => {
+  event.stopPropagation(); // Stops the event from bubbling to the parent
+  console.log('Child clicked');
+});
+```
+Now, when you click on the #child button, the output will be:
+
+```text
+Child clicked
+```
+The event will not bubble up to the parent element because stopPropagation() is used.
+
+### Use Cases of Event Bubbling and Capturing:
+* **Event Delegation (Bubbling):**
+
+Event bubbling is often used for event delegation, where you attach a single event listener to a parent element to handle events from multiple child elements, rather than attaching individual listeners to each child. This improves performance, especially with dynamic content.
+```js
+
+document.getElementById('parent').addEventListener('click', (event) => {
+  if (event.target.tagName === 'BUTTON') {
+    console.log('Button clicked:', event.target.textContent);
+  }
+});
+```
+* **Capturing for Special Scenarios:**
+
+Event capturing is useful in cases where you want to handle events on parent elements before the target element processes the event, such as in certain custom UI components or form validation.
+
+**Conclusion:**
+- Event bubbling is the default behavior in JavaScript, where events "bubble up" from the target element to its ancestors.
+- Event capturing is the opposite, where the event "captures" starting from the ancestors and trickles down to the target element.
+- You can stop event propagation using stopPropagation(), and event delegation takes advantage of bubbling to handle events efficiently.
+
 
 
