@@ -176,7 +176,47 @@ console.log(obj1 === obj2); // false, because they are different objects in memo
 
 <img width="535" alt="image" src="https://github.com/user-attachments/assets/b4083906-8e3f-4285-90f7-f53f11c02e0f">
 
+#Type Coercion
 
+Type Coercion refers to the automatic or implicit conversion of values from one data type to another. JavaScript is dynamically typed, so it attempts to convert values as needed during runtime.
+
+There are two types of type coercion:
+
+**Implicit Coercion:** Automatically happens when JavaScript tries to perform operations with mismatched data types.
+
+Example:
+
+```javascript
+
+let result = "5" + 10;  // "510" (string concatenation)
+let result2 = "5" - 1;  // 4 (string converted to number)
+console.log(result);  // "510"
+console.log(result2); // 4
+```
+**Explicit Coercion:** You can manually convert values from one type to another using functions like Number(), String(), or Boolean().
+
+Example:
+
+```javascript
+
+let numStr = "42";
+let num = Number(numStr);  // Converts string "42" to number 42
+console.log(num);  // 42
+
+let bool = Boolean(0);  // Converts 0 to false
+console.log(bool);  // false
+```
+**Common Implicit Coercion Pitfalls:**
+**== vs ===:**
+== does type coercion, while === does strict comparison.
+
+Example:
+
+```javascript
+
+console.log(1 == "1");  // true (coerced to same type)
+console.log(1 === "1"); // false (no coercion, strict equality)
+```
 # JavaScript Scopes
 
 In JavaScript, there are several kinds of scopes that determine the visibility and lifespan of variables. These include **Global Scope**, **Function Scope**, **Block Scope**, and **Module Scope**. Understanding these helps in writing more organized and efficient code.
@@ -202,7 +242,7 @@ Here, globalVar is available inside and outside the function because it’s in t
 
 ## 2. Function Scope
 Variables declared inside a function are only accessible within that function. They cannot be accessed outside of the function.
-functionScopedVar is function-scoped.
+In the below example, functionScopedVar is function-scoped.
 
 Example:
 ```js
@@ -605,4 +645,255 @@ console.log(memoizedFibonacci(10)); // 55 (retrieved from cache)
 console.log(memoizedFibonacci(20)); // 6765
 console.log(memoizedFibonacci(20)); // 6765 (retrieved from cache)
 ```
+# Immediately Invoked Function Expressions(IIFE)
+
+An Immediately Invoked Function Expression (IIFE) is a function that is executed as soon as it is defined. In JavaScript, IIFEs are commonly used to create a private scope, prevent variable collisions, and execute code immediately without polluting the global namespace.
+
+### Syntax of IIFE:
+An IIFE is simply a function wrapped in parentheses and immediately invoked with another set of parentheses.
+
+Basic Structure:
+```js
+
+(function() {
+  // code to be executed immediately
+})();
+```
+Alternatively, you can use an arrow function:
+
+```js
+(() => {
+  // code to be executed immediately
+})();
+```
+**Example of IIFE:**
+```js
+
+(function() {
+  let message = 'IIFE Example!';
+  console.log(message);
+})(); // Output: IIFE Example!
+```
+Here, the function is defined and invoked immediately, and the variable message is only accessible inside the function (private scope).
+
+### Why Use IIFEs?
+1. **Avoiding Global Scope Pollution:** Variables declared inside an IIFE are scoped to that function and cannot be accessed globally, preventing conflicts with other code or libraries.
+
+Example:
+
+```js
+
+var globalVar = 'Global Scope';
+
+(function() {
+  var localVar = 'Local Scope';
+  console.log(localVar); // Local Scope
+})();
+
+console.log(globalVar); // Global Scope
+// console.log(localVar); // Error! localVar is not defined outside
+```
+In this example, localVar is confined to the IIFE and does not interfere with the global scope.
+
+2. **Private Variables:** IIFEs are used to create private variables that cannot be accessed from outside the function, ensuring encapsulation.
+
+**Example:**
+
+```js
+
+var counter = (function() {
+  let count = 0; // Private variable
+  return function() {
+    count++;
+    console.log(count);
+  };
+})();
+
+counter(); // 1
+counter(); // 2
+// The `count` variable remains private and is inaccessible from outside
+```
+In this example, the count variable is encapsulated inside the IIFE, and the only way to manipulate it is via the returned function.
+
+3. **Module Pattern:** IIFEs are often used in the module pattern to create modules with private data and methods, providing a way to organize and structure code.
+
+**Example:**
+
+```js
+
+const myModule = (function() {
+  const privateVar = 'I am private';
+
+  function privateMethod() {
+    return privateVar;
+  }
+
+  return {
+    publicMethod: function() {
+      return privateMethod();
+    }
+  };
+})();
+
+console.log(myModule.publicMethod()); // I am private
+```
+Here, the privateVar and privateMethod are inaccessible from outside the IIFE, but publicMethod can expose them safely.
+
+4. **Preventing Variable Hoisting Issues:** IIFEs can be useful to prevent hoisting issues when dealing with closures inside loops, ensuring each iteration maintains its own scope.
+
+**Example:**
+
+```js
+
+for (var i = 0; i < 3; i++) {
+  (function(i) {
+    setTimeout(function() {
+      console.log(i);
+    }, 1000);
+  })(i);
+}
+// Output: 0, 1, 2 (each value is preserved in its scope)
+```
+Without the IIFE, the loop would retain the last value of i after the loop finishes (due to closure behavior), and the output would be 3, 3, 3. The IIFE creates a new scope for each iteration, preserving the correct i value.
+
+5. **Initialization Code:** IIFEs are used to run initialization code immediately, such as setting up event listeners, configuring environment settings, or initializing variables when the script loads.
+
+**Example:**
+
+```js
+
+(function() {
+  console.log('Initializing...');
+  // Set up event listeners or environment settings
+})(); // Output: Initializing...
+```
+### Suummary:
+- IIFE (Immediately Invoked Function Expression) is a JavaScript function that runs immediately after it’s defined.
+- It helps avoid polluting the global namespace, creates private variables, and solves closure-related problems, especially in loops.
+- Common use cases include initialization code, encapsulating functionality, and applying the module pattern.
+- By utilizing IIFEs, you can write cleaner, more maintainable JavaScript code, reduce the chances of variable conflicts, and maintain a better-organized codebase.
+
+# CallBack Functions
+A callback function is a function passed into another function as an argument and is executed after the completion of that function. In JavaScript, callbacks are commonly used to handle asynchronous operations, ensuring that a certain piece of code is executed only after a specific task is completed.
+
+**Key Concepts of Callbacks:**
+* _Higher-order function:_ A function that takes another function (callback) as an argument.
+* _Asynchronous behavior:_ Callbacks are especially useful in handling asynchronous tasks, like reading files, making API requests, or setting timers.
+* 
+Example of a Basic Callback:
+```js
+
+function greet(name, callback) {
+  console.log('Hello ' + name);
+  callback();
+}
+
+function sayGoodbye() {
+  console.log('Goodbye!');
+}
+
+greet('John', sayGoodbye);
+```
+Explanation:
+The greet function takes a name and a callback function as parameters.
+After executing its primary task (greeting the user), it executes the callback function, which, in this case, says "Goodbye!"
+
+### Use Cases of Callback Functions:
+
+1. **Handling Asynchronous Operations:**
+JavaScript is non-blocking and handles many operations asynchronously (like API calls, file handling, etc.). Callbacks are used to execute code only after an async operation is finished.
+
+Example with setTimeout:
+
+```js
+
+function printMessage() {
+  console.log("Message printed after 2 seconds");
+}
+setTimeout(printMessage, 2000); // Will execute printMessage after 2 seconds
+```
+
+2. **Event Handlers:**
+Callbacks are commonly used as event handlers, such as when a user clicks a button or submits a form.
+
+Example:
+
+```html
+
+<button id="myButton">Click me</button>
+
+<script>
+document.getElementById('myButton').addEventListener('click', function() {
+  console.log('Button was clicked!');
+});
+</script>
+```
+Here, the addEventListener method takes a callback function, which will execute when the button is clicked.
+
+3. **Making HTTP Requests (APIs):**
+In asynchronous code, callbacks are useful when dealing with API requests or data fetching. Callbacks ensure that the response is handled after the request completes.
+
+Example using a simple API request with XMLHttpRequest:
+
+```js
+
+function fetchData(url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      callback(null, xhr.responseText);
+    } else {
+      callback('Error: ' + xhr.status);
+    }
+  };
+  xhr.send();
+}
+
+fetchData('https://api.example.com/data', function(error, data) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('Data received:', data);
+  }
+});
+```
+In this example, the fetchData function sends an HTTP request, and once it’s done, it calls the callback function to handle the response or an error.
+
+4.** Functional Programming:**
+In functional programming, callbacks are commonly used with array methods like map, filter, or reduce to perform operations on array elements.
+
+Example with map:
+
+```js
+
+const numbers = [1, 2, 3, 4, 5];
+const doubled = numbers.map(function(num) {
+  return num * 2;
+});
+
+console.log(doubled); // [2, 4, 6, 8, 10]
+```
+Here, the callback function multiplies each element in the array by 2.
+
+5. ** Animation or Timers:**
+Callbacks can be used to perform repeated actions, such as animations or tasks based on time intervals.
+
+Example with setInterval:
+
+```js
+
+function updateTime() {
+  console.log('Current time: ' + new Date().toLocaleTimeString());
+}
+
+setInterval(updateTime, 1000); // Print time every second
+```
+**Conclusion:**
+Callback functions are a core concept in JavaScript, used to handle asynchronous tasks and pass functions as arguments to other functions. They are widely used in event handling, API requests, and functional programming methods, making JavaScript flexible and efficient for handling both synchronous and asynchronous operations.
+
+
+
+
+
 
