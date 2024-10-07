@@ -2042,7 +2042,7 @@ In JavaScript, the execution context is an abstract concept that refers to the e
 ### Types of Execution Contexts:
 There are three types of execution contexts in JavaScript:
 
-* **Global Execution Context (GEC):**
+**Global Execution Context (GEC):**
 
 - This is the default context in which JavaScript code runs when the script first starts.
 - It is created as soon as the JavaScript file or code begins to execute.
@@ -2050,14 +2050,14 @@ There are three types of execution contexts in JavaScript:
 - In Node.js, the global object is global.
 - By default, variables and functions defined in the global scope are part of the global execution context.
 
-* **Function Execution Context (FEC):**
+**Function Execution Context (FEC):**
   
 - A new execution context is created every time a function is invoked.
 - Each function has its own execution context.
 - The function execution context contains information about the function's local variables, arguments, and the value of this.
 - A separate execution context is created each time a function is called, and it exists until the function finishes execution.
   
-* **Eval Execution Context:**
+**Eval Execution Context:**
 
 - The eval() function creates a separate execution context to evaluate code passed as a string.
 - However, this is rarely used due to security concerns and performance issues.
@@ -2066,18 +2066,18 @@ There are three types of execution contexts in JavaScript:
 
 Each execution context has three key components:
 
-* **Variable Object (VO) / Lexical Environment (LE):**
+**Variable Object (VO) / Lexical Environment (LE):**
 
 - Contains information about variables, function declarations, and function arguments.
 - In the global context, the variable object is the global object (window in the browser).
 - In a function context, it contains function arguments, local variables, and inner function declarations.
   
-* **Scope Chain:**
+**Scope Chain:**
 
 - The scope chain keeps track of all the variables accessible from the current execution context, including variables from parent contexts.
 - It ensures that JavaScript can access variables and functions defined in the outer lexical environment (i.e., from outer scopes).
   
-* **this Binding:**
+**this Binding:**
 
 - The value of this depends on how the function is invoked. In the global execution context, this refers to the global object (window in browsers).
 - In a function context, this refers to the object that owns the method or the function (or is explicitly set using call(), apply(), or bind()).
@@ -2086,13 +2086,13 @@ Each execution context has three key components:
 
 Whenever JavaScript code is executed, an execution context goes through two phases:
 
-* **Creation Phase:**
+**Creation Phase:**
 
 - The JavaScript engine scans the code and allocates memory for variables and functions but does not assign their values yet.
 - This is often referred to as hoisting.
 - Function declarations are stored with their definitions, and variables are initialized with undefined.
   
-* **Execution Phase:**
+**Execution Phase:**
 
 - In this phase, the JavaScript engine assigns values to variables and executes the code line by line.
   
@@ -2122,17 +2122,17 @@ outerFunction();
 ```
 ### Execution Context Creation:
 
-* **Global Execution Context:**
+**Global Execution Context:**
 
 - globalVar is stored in the global execution context.
 - The outerFunction function declaration is also stored here.
   
-* **Function Execution Context (outerFunction):**
+**Function Execution Context (outerFunction):**
 
 - When outerFunction is called, a new execution context is created, and outerVar is stored in this function’s execution context.
 - The innerFunction declaration is stored in the outerFunction context.
   
-* **Function Execution Context (innerFunction):**
+**Function Execution Context (innerFunction):**
 
 - When innerFunction is called, a new execution context is created for it, and innerVar is stored in this context.
 - The scope chain ensures that innerFunction can access variables from its own execution context, as well as the outerFunction and global contexts.
